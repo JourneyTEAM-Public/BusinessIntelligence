@@ -1,0 +1,9 @@
+let
+  Source = DateTime.From(DateTimeZone.FixedUtcNow()),
+  #"Converted to table" = #table(1, {{Source}}),
+  #"Changed column type" = Table.TransformColumnTypes(#"Converted to table", {{"Column1", type datetime}}),
+  #"Renamed columns" = Table.RenameColumns(#"Changed column type", {{"Column1", "Last Refresh UTC"}}),
+  #"Added custom" = Table.AddColumn(#"Renamed columns", "Last Refresh Local", each #"Last Refresh Local", type datetime),
+  #"Added custom 1" = Table.AddColumn(#"Added custom", "Local Time Zone", each #"Local Time Zone", type text)
+in
+  #"Added custom 1"
