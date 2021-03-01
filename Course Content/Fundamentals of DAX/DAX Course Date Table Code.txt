@@ -1,0 +1,51 @@
+Date = 
+VAR Dates = 
+    CALENDARAUTO()
+RETURN
+    Dates
+
+// VAR Dates = 
+//     CALENDARAUTO()
+// RETURN
+//     ADDCOLUMNS(
+//         Dates,
+//         "Year", YEAR ( [Date] ),
+//         "Month", FORMAT ( [Date], "mmm" ),
+//         "Month Number", MONTH ( [Date] ),
+//         "Day of Week", FORMAT ( [Date], "dddd" ),
+//         "Day of Week Number", WEEKDAY ( [Date] )
+//     )
+
+/* 
+VAR Dates =  
+	CALENDAR (
+		DATE ( 2016, 1, 1 ),
+		DATE ( 2019, 12, 31 )
+)
+RETURN
+    Dates
+// With dynamic dates
+
+VAR Dates = 
+	CALENDAR ( 
+		DATE ( YEAR ( MIN ( [Order Date] ) ), 1, 1 ),
+		DATE ( YEAR ( MAX ( [Delivery Date] ) ), 12, 31 )
+)
+RETURN
+    Dates
+*/	
+	
+// VAR Dates = 
+//     CALENDAR ( 
+//			DATE ( YEAR ( MIN ( Sales[Order Date] ) ), 1, 1 ),
+//			DATE ( YEAR ( MAX ( Sales[Due Date] ) ), 12, 31 )
+//	   )
+// RETURN     
+//	   ADDCOLUMNS(
+//         Dates,
+//         "Year", YEAR ( [Date] ),
+//         "Month", FORMAT ( [Date], "mmm" ),
+//         "Month Number", MONTH ( [Date] ),
+//         "Day of Week", FORMAT ( [Date], "dddd" ),
+//         "Day of Week Number", WEEKDAY ( [Date] )
+//     )
