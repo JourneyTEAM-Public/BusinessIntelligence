@@ -1,11 +1,11 @@
 let
   #"*PARAMETERS*" = 1,
-  FromYear = Date.Year(#"Dynamic Start Date"),
-  ToYear = Date.Year(#"Dynamic End Date"),
-  StartofFiscalYear = #"Fiscal Year Start Month",
+  FromYear = Date.Year(FromDate),
+  ToYear = Date.Year(ToDate),
+  StartofFiscalYear = 6,
   firstDayofWeek = Day.Monday,
-  FromDate = #"Dynamic Start Date",
-  ToDate = #"Dynamic End Date",
+  FromDate = #date(2019,1,1),
+  ToDate = #date(2025,12,31),
   Today = DateTime.LocalNow(),
   #"*DATE TABLE*" = 1,
   Source = List.Dates(
