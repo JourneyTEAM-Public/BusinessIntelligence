@@ -1,12 +1,22 @@
 let
   #"*PARAMETERS*" = 1,
-  FromYear = Date.Year(FromDate),
-  ToYear = Date.Year(ToDate),
-  StartofFiscalYear = 6,
+  YearsBack = 4,
+  YearsForward = 1,
+  DynamicStartDate = #date(Date.Year(DateTimeZone.FixedUtcNow()) - YearsBack,1,1),
+  DynamicEndDate = #date(Date.Year(DateTimeZone.FixedUtcNow()) - YearsForward,12,31),
+  FiscalYearStartMonth = 7,
+  // This parameter determines the first year of this date dimension. Dates will begin on the 1st of January of the year written.
+  FromYear = Date.Year(DynamicStartDate),
+  // This parameter determines the last year of this date dimension. The final date of the table will be December 31st of the year written.
+  ToYear = Date.Year(DynamicEndDate),
+  // Use this parameter to set the month number that is the start of your organization's fiscal/financial year. (Example: If your fiscal year starts July, 7 should be written here.)
+  StartofFiscalYear = FiscalYearStartMonth,
+  // This parameter determines the day considered the first day of the week.
   firstDayofWeek = Day.Monday,
-  FromDate = #date(2019,1,1),
-  ToDate = #date(2025,12,31),
-  Today = DateTime.LocalNow(),
+  // Clear depiction of the first day of your table.
+  FromDate = DynamicStartDate,
+  // Clear depiction of the last day of your table.
+  ToDate = DynamicEndDate,
   #"*DATE TABLE*" = 1,
   Source = List.Dates(
     FromDate,
