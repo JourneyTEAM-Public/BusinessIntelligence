@@ -4,6 +4,7 @@ let
   YearsForward = 1,
   DynamicStartDate = #date(Date.Year(DateTimeZone.FixedUtcNow()) - YearsBack,1,1),
   DynamicEndDate = #date(Date.Year(DateTimeZone.FixedUtcNow()) - YearsForward,12,31),
+  Today = Date.From(DateTime.LocalNow()),
   FiscalYearStartMonth = 7,
   // This parameter determines the first year of this date dimension. Dates will begin on the 1st of January of the year written.
   FromYear = Date.Year(DynamicStartDate),
