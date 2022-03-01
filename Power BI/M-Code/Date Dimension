@@ -75,8 +75,8 @@ let
     #"Quarter Year Index" = Table.ExpandTableColumn(#"Month Year Index", "Quarter Year Table", {"Quarter Year Index"}, {"Quarter Year Index"}),
     #"Week Year Index" = Table.ExpandTableColumn(#"Quarter Year Index", "Week Year Table", {"Year Week Index"}, {"Year Week Index"}),
   #"Added Start of Fiscal Year" = Table.AddColumn(#"Week Year Index", "Start of Fiscal Year", each #date((if [Month] < Number.From(StartofFiscalYear) then [Year] - 1 else [Year]), Number.From(StartofFiscalYear), 1), type date),
-  #"Reordered columns" = Table.ReorderColumns(#"Added Start of Fiscal Year", {"Date", "Year", "Week of Year", "Month", "Quarter", "Start of Year", "End of Year", "Start of Month", "End of Month", "Days in Month", "Day", "Day Name", "Day of Week", "Day of Year", "Month Name", "Start of Quarter", "End of Quarter", "Week of Month", "Start of Week", "End of Week", "Fiscal Year", "Fiscal Quarter", "Fiscal Month", "Quarter Name", "Fiscal Quarter Name", "Day Name Shortened", "Month Name Shortened", "Month Year", "Fiscal Month Year", "Quarter Year", "Fiscal Quarter Year", "Month Year Index", "Quarter Year Index", "Year Week Index", "Start of Fiscal Year"}),
-    #"Is Past" = Table.AddColumn(#"Reordered columns", "Is Past", each if [Date] < DateTime.Date(DateTime.LocalNow()) then true else false, type logical),
+    #"Removed Columns" = Table.RemoveColumns(#"Added Start of Fiscal Year",{"FiscalBaseDate"}),
+  #"Is Past" = Table.AddColumn(#"Removed Columns", "Is Past", each if [Date] < DateTime.Date(DateTime.LocalNow()) then true else false, type logical),
   #"Added Is Current Month" = Table.AddColumn(#"Is Past", "Is Current Month", each if Date.StartOfMonth(Date.From(DateTime.LocalNow())) = [Start of Month] then true else false, type logical),
   #"Added Is Current Quarter" = Table.AddColumn(#"Added Is Current Month", "Is Current Quarter", each if Date.StartOfQuarter(Date.From(DateTime.LocalNow())) = [Start of Quarter] then true else false, type logical),
   #"Added Is Current Year" = Table.AddColumn(#"Added Is Current Quarter", "Is Current Year", each if [Year] = Date.Year(DateTime.LocalNow()) then true else false, type logical),
@@ -85,8 +85,6 @@ let
 +([Month]-Date.Month(Today)), Int64.Type),
   #"Added Quarter Offset" = Table.AddColumn(#"Added Month Offset", "Quarter Offset", each (([Year]-Date.Year(Today))*4)
 +([Quarter]-Date.QuarterOfYear(Today)), Int64.Type),
-  #"Added Year Offset" = Table.AddColumn(#"Added Quarter Offset", "Year Offset", each [Year]-Date.Year(Today), Int64.Type),
-  #"Transform columns" = Table.TransformColumnTypes(#"Added Year Offset", {{"FiscalBaseDate", type text}}),
-  #"Replace errors" = Table.ReplaceErrorValues(#"Transform columns", {{"FiscalBaseDate", null}})
+  #"Added Year Offset" = Table.AddColumn(#"Added Quarter Offset", "Year Offset", each [Year]-Date.Year(Today), Int64.Type)
 in
-  #"Replace errors"
+    #"Added Year Offset"
