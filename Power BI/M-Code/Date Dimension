@@ -1,7 +1,7 @@
 let
   #"*PARAMETERS*" = 1,
-  YearsBack = 4,
-  YearsForward = 1,
+  YearsBack = 5,
+  YearsForward = 5,
   DynamicStartDate = #date(Date.Year(DateTimeZone.FixedUtcNow()) - YearsBack,1,1),
   DynamicEndDate = #date(Date.Year(DateTimeZone.FixedUtcNow()) + YearsForward,12,31),
   Today = Date.From(DateTime.LocalNow()),
