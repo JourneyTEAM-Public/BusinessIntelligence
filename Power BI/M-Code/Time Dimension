@@ -1,6 +1,6 @@
 let
   // This Time Dimension was sourced largely from the time dimensions freely provided by FourMoo and Radacad. Generous people are awesome people.
-  Source = List.Times(#time(0, 0, 0), 84600, #duration(0, 0, 0, 1)),
+  Source = List.Times(#time(0, 0, 0), 86400, #duration(0, 0, 0, 1)),
   #"Converted to Table" = Table.FromList(Source, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
   #"Renamed Columns" = Table.RenameColumns(#"Converted to Table", {{"Column1", "Time"}}),
   #"Changed column type" = Table.TransformColumnTypes(#"Renamed Columns", {{"Time", type time}}),
@@ -9,7 +9,7 @@ let
   Hour = Table.AddColumn(#"End of Hour", "Hour", each Time.Hour([Time]), type number),
   Minute = Table.AddColumn(Hour, "Minute", each Time.Minute([Time]), type number),
   Second = Table.AddColumn(Minute, "Second", each Time.Second([Time]), type number),
-  #"AM/PM" = Table.AddColumn(Second, "AM/PM", each if [Hour] <= 11 then "AM" else "PM", type text),
+  #"AM/PM" = Table.AddColumn(Second, "AM/PM", each Text.End(Text.From([Time]), 2), type text),
   #"Hour Label" = Table.AddColumn(#"AM/PM", "Hour Label", each "0" & Text.From([Hour], "en-NZ"), type text),
   #"Extracted Last Characters" = Table.TransformColumns(#"Hour Label", {{"Hour Label", each Text.End(_, 2), type text}}),
   #"Minute Label" = Table.AddColumn(#"Extracted Last Characters", "Minute Label", each "0" & Text.From([Minute], "en-NZ"), type text),
@@ -27,6 +27,7 @@ let
   #"Minute Bin 15" = Table.AddColumn(#"Multiplied Column", "Minute Bin 15", each Number.IntegerDivide([Minute], 15), Int64.Type),
   #"Multiplied Column1" = Table.TransformColumns(#"Minute Bin 15", {{"Minute Bin 15", each _ * 15, type number}}),
   #"Minute Bin 10" = Table.AddColumn(#"Multiplied Column1", "Minute Bin 10", each Number.IntegerDivide([Minute], 10), Int64.Type),
-  #"Multiplied Column2" = Table.TransformColumns(#"Minute Bin 10", {{"Minute Bin 10", each _ * 10, type number}})
+  #"Multiplied Column2" = Table.TransformColumns(#"Minute Bin 10", {{"Minute Bin 10", each _ * 10, type number}}),
+  #"Hour AM/PM" = Table.AddColumn(#"Multiplied Column2", "Hour AM/PM", each Text.BeforeDelimiter(Text.From([Time]), ":") & " " & [#"AM/PM"], type text)
 in
-  #"Multiplied Column2"
+  #"Hour AM/PM"
