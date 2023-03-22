@@ -1,0 +1,5 @@
+if(
+	contains(actions('POST_Sales_Invoice_Lines'),'error'),
+	actions('POST_Sales_Invoice_Lines')['error']['message'],
+	body('POST_Sales_Invoice_Lines')['error']['message']
+)
